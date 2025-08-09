@@ -116,23 +116,43 @@
         "tags": [
           "Companies"
         ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 15
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/CompanyIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/CompanyDtoPaginatedResponseApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CompanyIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/CompanyDtoPaginatedResponseApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CompanyIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/CompanyDtoPaginatedResponseApiResponse"
                 }
               }
             }
@@ -147,17 +167,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Company"
+                "$ref": "#/components/schemas/CreateCompanyDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Company"
+                "$ref": "#/components/schemas/CreateCompanyDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Company"
+                "$ref": "#/components/schemas/CreateCompanyDto"
               }
             }
           }
@@ -168,17 +188,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/CompanyApiResponse"
+                  "$ref": "#/components/schemas/CompanyDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CompanyApiResponse"
+                  "$ref": "#/components/schemas/CompanyDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CompanyApiResponse"
+                  "$ref": "#/components/schemas/CompanyDtoApiResponse"
                 }
               }
             }
@@ -208,17 +228,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/CompanyApiResponse"
+                  "$ref": "#/components/schemas/CompanyDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CompanyApiResponse"
+                  "$ref": "#/components/schemas/CompanyDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CompanyApiResponse"
+                  "$ref": "#/components/schemas/CompanyDtoApiResponse"
                 }
               }
             }
@@ -244,17 +264,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Company"
+                "$ref": "#/components/schemas/UpdateCompanyDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Company"
+                "$ref": "#/components/schemas/UpdateCompanyDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Company"
+                "$ref": "#/components/schemas/UpdateCompanyDto"
               }
             }
           }
@@ -265,17 +285,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/CompanyApiResponse"
+                  "$ref": "#/components/schemas/CompanyDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CompanyApiResponse"
+                  "$ref": "#/components/schemas/CompanyDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CompanyApiResponse"
+                  "$ref": "#/components/schemas/CompanyDtoApiResponse"
                 }
               }
             }
@@ -303,20 +323,63 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponse"
+                  "$ref": "#/components/schemas/ObjectApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponse"
+                  "$ref": "#/components/schemas/ObjectApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponse"
+                  "$ref": "#/components/schemas/ObjectApiResponse"
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/Companies/{id}/upload-logo": {
+      "post": {
+        "tags": [
+          "Companies"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "logo": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "logo": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -326,23 +389,43 @@
         "tags": [
           "JobCategories"
         ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 15
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobCategoryIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/JobCategoryDtoPaginatedResponseApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobCategoryIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/JobCategoryDtoPaginatedResponseApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobCategoryIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/JobCategoryDtoPaginatedResponseApiResponse"
                 }
               }
             }
@@ -357,17 +440,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/JobCategory"
+                "$ref": "#/components/schemas/CreateJobCategoryDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/JobCategory"
+                "$ref": "#/components/schemas/CreateJobCategoryDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/JobCategory"
+                "$ref": "#/components/schemas/CreateJobCategoryDto"
               }
             }
           }
@@ -378,17 +461,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobCategoryApiResponse"
+                  "$ref": "#/components/schemas/JobCategoryDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobCategoryApiResponse"
+                  "$ref": "#/components/schemas/JobCategoryDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobCategoryApiResponse"
+                  "$ref": "#/components/schemas/JobCategoryDtoApiResponse"
                 }
               }
             }
@@ -418,17 +501,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobCategoryApiResponse"
+                  "$ref": "#/components/schemas/JobCategoryDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobCategoryApiResponse"
+                  "$ref": "#/components/schemas/JobCategoryDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobCategoryApiResponse"
+                  "$ref": "#/components/schemas/JobCategoryDtoApiResponse"
                 }
               }
             }
@@ -454,17 +537,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/JobCategory"
+                "$ref": "#/components/schemas/UpdateJobCategoryDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/JobCategory"
+                "$ref": "#/components/schemas/UpdateJobCategoryDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/JobCategory"
+                "$ref": "#/components/schemas/UpdateJobCategoryDto"
               }
             }
           }
@@ -475,17 +558,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobCategoryApiResponse"
+                  "$ref": "#/components/schemas/JobCategoryDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobCategoryApiResponse"
+                  "$ref": "#/components/schemas/JobCategoryDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobCategoryApiResponse"
+                  "$ref": "#/components/schemas/JobCategoryDtoApiResponse"
                 }
               }
             }
@@ -513,17 +596,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponse"
+                  "$ref": "#/components/schemas/ObjectApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponse"
+                  "$ref": "#/components/schemas/ObjectApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponse"
+                  "$ref": "#/components/schemas/ObjectApiResponse"
                 }
               }
             }
@@ -536,23 +619,43 @@
         "tags": [
           "JobPosts"
         ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 15
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobPostIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/JobPostDtoPaginatedResponseApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobPostIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/JobPostDtoPaginatedResponseApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobPostIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/JobPostDtoPaginatedResponseApiResponse"
                 }
               }
             }
@@ -567,17 +670,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/JobPost"
+                "$ref": "#/components/schemas/CreateJobPostDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/JobPost"
+                "$ref": "#/components/schemas/CreateJobPostDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/JobPost"
+                "$ref": "#/components/schemas/CreateJobPostDto"
               }
             }
           }
@@ -588,17 +691,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobPostApiResponse"
+                  "$ref": "#/components/schemas/JobPostDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobPostApiResponse"
+                  "$ref": "#/components/schemas/JobPostDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobPostApiResponse"
+                  "$ref": "#/components/schemas/JobPostDtoApiResponse"
                 }
               }
             }
@@ -628,17 +731,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobPostApiResponse"
+                  "$ref": "#/components/schemas/JobPostDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobPostApiResponse"
+                  "$ref": "#/components/schemas/JobPostDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobPostApiResponse"
+                  "$ref": "#/components/schemas/JobPostDtoApiResponse"
                 }
               }
             }
@@ -664,17 +767,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/JobPost"
+                "$ref": "#/components/schemas/UpdateJobPostDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/JobPost"
+                "$ref": "#/components/schemas/UpdateJobPostDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/JobPost"
+                "$ref": "#/components/schemas/UpdateJobPostDto"
               }
             }
           }
@@ -685,17 +788,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobPostApiResponse"
+                  "$ref": "#/components/schemas/JobPostDtoApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobPostApiResponse"
+                  "$ref": "#/components/schemas/JobPostDtoApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/JobPostApiResponse"
+                  "$ref": "#/components/schemas/JobPostDtoApiResponse"
                 }
               }
             }
@@ -723,20 +826,333 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponse"
+                  "$ref": "#/components/schemas/ObjectApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponse"
+                  "$ref": "#/components/schemas/ObjectApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponse"
+                  "$ref": "#/components/schemas/ObjectApiResponse"
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/JobPosts/{id}/upload-thumbnail": {
+      "post": {
+        "tags": [
+          "JobPosts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "thumbnail": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "thumbnail": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Users": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Users/{id}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Users/{id}/change-password": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Users/{id}/upload-photo": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "photo": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "photo": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -799,65 +1215,31 @@
         },
         "additionalProperties": false
       },
-      "Applicant": {
+      "ChangePasswordDto": {
+        "required": [
+          "confirmPassword",
+          "currentPassword",
+          "newPassword"
+        ],
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
+          "currentPassword": {
+            "minLength": 1,
+            "type": "string"
           },
-          "userId": {
-            "type": "string",
-            "format": "uuid"
+          "newPassword": {
+            "maxLength": 100,
+            "minLength": 6,
+            "type": "string"
           },
-          "jobId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "status": {
-            "type": "string",
-            "nullable": true
-          },
-          "cv": {
-            "type": "string",
-            "nullable": true
-          },
-          "nationalIdentityCard": {
-            "type": "string",
-            "nullable": true
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "deletedAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "job": {
-            "$ref": "#/components/schemas/JobPost"
-          },
-          "selections": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Selection"
-            },
-            "nullable": true
-          },
-          "user": {
-            "$ref": "#/components/schemas/User"
+          "confirmPassword": {
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false
       },
-      "Company": {
+      "CompanyDto": {
         "type": "object",
         "properties": {
           "id": {
@@ -880,7 +1262,15 @@
             "type": "string",
             "nullable": true
           },
-          "address": {
+          "logo": {
+            "type": "string",
+            "nullable": true
+          },
+          "location": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
             "type": "string",
             "nullable": true
           },
@@ -893,23 +1283,11 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
-          },
-          "deletedAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "jobPosts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/JobPost"
-            },
-            "nullable": true
           }
         },
         "additionalProperties": false
       },
-      "CompanyApiResponse": {
+      "CompanyDtoApiResponse": {
         "type": "object",
         "properties": {
           "success": {
@@ -920,12 +1298,76 @@
             "nullable": true
           },
           "data": {
-            "$ref": "#/components/schemas/Company"
+            "$ref": "#/components/schemas/CompanyDto"
           }
         },
         "additionalProperties": false
       },
-      "CompanyIEnumerableApiResponse": {
+      "CompanyDtoPaginatedResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CompanyDto"
+            },
+            "nullable": true
+          },
+          "currentPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "from": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "path": {
+            "type": "string",
+            "nullable": true
+          },
+          "perPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "to": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firstPageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastPageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "nextPageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "prevPageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PageLink"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CompanyDtoPaginatedResponseApiResponse": {
         "type": "object",
         "properties": {
           "success": {
@@ -936,16 +1378,188 @@
             "nullable": true
           },
           "data": {
+            "$ref": "#/components/schemas/CompanyDtoPaginatedResponse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateCompanyDto": {
+        "required": [
+          "email",
+          "location",
+          "name",
+          "phone"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email"
+          },
+          "phone": {
+            "minLength": 1,
+            "type": "string",
+            "format": "tel"
+          },
+          "website": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "logo": {
+            "type": "string",
+            "nullable": true
+          },
+          "location": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string"
+          },
+          "description": {
+            "maxLength": 1000,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateJobCategoryDto": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateJobPostDto": {
+        "required": [
+          "benefits",
+          "companyId",
+          "description",
+          "requirements",
+          "status",
+          "title",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "companyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string"
+          },
+          "thumbnail": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "maxLength": 2000,
+            "minLength": 0,
+            "type": "string"
+          },
+          "requirements": {
+            "maxLength": 1000,
+            "minLength": 0,
+            "type": "string"
+          },
+          "benefits": {
+            "maxLength": 1000,
+            "minLength": 0,
+            "type": "string"
+          },
+          "type": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "status": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "jobCategoryIds": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Company"
+              "type": "string",
+              "format": "uuid"
             },
             "nullable": true
           }
         },
         "additionalProperties": false
       },
-      "JobCategory": {
+      "CreateUserDto": {
+        "required": [
+          "email",
+          "name",
+          "password",
+          "phone",
+          "role"
+        ],
+        "type": "object",
+        "properties": {
+          "photo": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "phone": {
+            "minLength": 1,
+            "type": "string",
+            "format": "tel"
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email"
+          },
+          "address": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "maxLength": 1000,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "maxLength": 100,
+            "minLength": 6,
+            "type": "string"
+          },
+          "role": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "JobCategoryDto": {
         "type": "object",
         "properties": {
           "id": {
@@ -965,23 +1579,11 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
-          },
-          "deletedAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "jobPosts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/JobPost"
-            },
-            "nullable": true
           }
         },
         "additionalProperties": false
       },
-      "JobCategoryApiResponse": {
+      "JobCategoryDtoApiResponse": {
         "type": "object",
         "properties": {
           "success": {
@@ -992,12 +1594,76 @@
             "nullable": true
           },
           "data": {
-            "$ref": "#/components/schemas/JobCategory"
+            "$ref": "#/components/schemas/JobCategoryDto"
           }
         },
         "additionalProperties": false
       },
-      "JobCategoryIEnumerableApiResponse": {
+      "JobCategoryDtoPaginatedResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JobCategoryDto"
+            },
+            "nullable": true
+          },
+          "currentPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "from": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "path": {
+            "type": "string",
+            "nullable": true
+          },
+          "perPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "to": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firstPageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastPageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "nextPageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "prevPageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PageLink"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "JobCategoryDtoPaginatedResponseApiResponse": {
         "type": "object",
         "properties": {
           "success": {
@@ -1008,16 +1674,12 @@
             "nullable": true
           },
           "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/JobCategory"
-            },
-            "nullable": true
+            "$ref": "#/components/schemas/JobCategoryDtoPaginatedResponse"
           }
         },
         "additionalProperties": false
       },
-      "JobPost": {
+      "JobPostDto": {
         "type": "object",
         "properties": {
           "id": {
@@ -1029,6 +1691,10 @@
             "format": "uuid"
           },
           "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "thumbnail": {
             "type": "string",
             "nullable": true
           },
@@ -1062,39 +1728,20 @@
             "format": "date-time",
             "nullable": true
           },
-          "deletedAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "applicants": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Applicant"
-            },
-            "nullable": true
-          },
           "company": {
-            "$ref": "#/components/schemas/Company"
-          },
-          "selections": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Selection"
-            },
-            "nullable": true
+            "$ref": "#/components/schemas/CompanyDto"
           },
           "jobCategories": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/JobCategory"
+              "$ref": "#/components/schemas/JobCategoryDto"
             },
             "nullable": true
           }
         },
         "additionalProperties": false
       },
-      "JobPostApiResponse": {
+      "JobPostDtoApiResponse": {
         "type": "object",
         "properties": {
           "success": {
@@ -1105,27 +1752,87 @@
             "nullable": true
           },
           "data": {
-            "$ref": "#/components/schemas/JobPost"
+            "$ref": "#/components/schemas/JobPostDto"
           }
         },
         "additionalProperties": false
       },
-      "JobPostIEnumerableApiResponse": {
+      "JobPostDtoPaginatedResponse": {
         "type": "object",
         "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          },
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/JobPost"
+              "$ref": "#/components/schemas/JobPostDto"
             },
             "nullable": true
+          },
+          "currentPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "from": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "path": {
+            "type": "string",
+            "nullable": true
+          },
+          "perPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "to": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firstPageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastPageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "nextPageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "prevPageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PageLink"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "JobPostDtoPaginatedResponseApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/JobPostDtoPaginatedResponse"
           }
         },
         "additionalProperties": false
@@ -1190,58 +1897,210 @@
         },
         "additionalProperties": false
       },
-      "Selection": {
+      "ObjectApiResponse": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
+          "success": {
+            "type": "boolean"
           },
-          "applicantId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "jobId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "stage": {
+          "message": {
             "type": "string",
             "nullable": true
           },
-          "status": {
-            "type": "string",
+          "data": {
             "nullable": true
-          },
-          "attachment": {
-            "type": "string",
-            "nullable": true
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "deletedAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "applicant": {
-            "$ref": "#/components/schemas/Applicant"
-          },
-          "job": {
-            "$ref": "#/components/schemas/JobPost"
           }
         },
         "additionalProperties": false
       },
-      "User": {
+      "PageLink": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "nullable": true
+          },
+          "label": {
+            "type": "string",
+            "nullable": true
+          },
+          "active": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateCompanyDto": {
+        "required": [
+          "email",
+          "location",
+          "name",
+          "phone"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email"
+          },
+          "phone": {
+            "minLength": 1,
+            "type": "string",
+            "format": "tel"
+          },
+          "website": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "logo": {
+            "type": "string",
+            "nullable": true
+          },
+          "location": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string"
+          },
+          "description": {
+            "maxLength": 1000,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateJobCategoryDto": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateJobPostDto": {
+        "required": [
+          "benefits",
+          "companyId",
+          "description",
+          "requirements",
+          "status",
+          "title",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "companyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string"
+          },
+          "thumbnail": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "maxLength": 2000,
+            "minLength": 0,
+            "type": "string"
+          },
+          "requirements": {
+            "maxLength": 1000,
+            "minLength": 0,
+            "type": "string"
+          },
+          "benefits": {
+            "maxLength": 1000,
+            "minLength": 0,
+            "type": "string"
+          },
+          "type": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "status": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "jobCategoryIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateUserDto": {
+        "required": [
+          "email",
+          "name",
+          "phone"
+        ],
+        "type": "object",
+        "properties": {
+          "photo": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "phone": {
+            "minLength": 1,
+            "type": "string",
+            "format": "tel"
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email"
+          },
+          "address": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "maxLength": 1000,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "role": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserDto": {
         "type": "object",
         "properties": {
           "id": {
@@ -1272,10 +2131,6 @@
             "type": "string",
             "nullable": true
           },
-          "password": {
-            "type": "string",
-            "nullable": true
-          },
           "role": {
             "type": "string",
             "nullable": true
@@ -1293,18 +2148,6 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time",
-            "nullable": true
-          },
-          "deletedAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "applicants": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Applicant"
-            },
             "nullable": true
           }
         },

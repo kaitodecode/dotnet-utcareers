@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using Amazon.S3;
+using dotnet_utcareers.Services;
+using Amazon.Runtime;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,8 +16,29 @@ builder.Services.AddControllers().AddJsonOptions(options => {
 
 var connectionString = builder.Configuration.GetConnectionString("default");
 
-builder.Services.AddDbContext<UTCarreersContext>(options =>
+builder.Services.AddDbContext<UTCareersContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+// Add AWS S3 service
+var awsSection = builder.Configuration.GetSection("AWS");
+var accessKey = awsSection["AccessKey"];
+var secretKey = awsSection["SecretKey"];
+var serviceUrl = awsSection["ServiceURL"];
+var region = awsSection["Region"] ?? "ap-southeast-1";
+
+// Buat config khusus untuk IDCloudHost
+var s3Config = new AmazonS3Config
+{
+    ServiceURL = serviceUrl, // endpoint IDCloudHost
+    ForcePathStyle = true    // penting untuk non-AWS S3
+};
+
+var credentials = new BasicAWSCredentials(accessKey, secretKey);
+var s3Client = new AmazonS3Client(credentials, s3Config);
+
+// Register AmazonS3Client sebagai singleton
+builder.Services.AddSingleton<IAmazonS3>(s3Client);
+builder.Services.AddScoped<ImageUploadService>();
 
 builder.Services.AddControllers();
 

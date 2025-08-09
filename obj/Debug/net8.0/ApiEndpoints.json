@@ -72,10 +72,21 @@
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "per_page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": [
       {
-        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[System.Collections.Generic.IEnumerable\u00601[[dotnet_utcareers.Models.Company, dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[dotnet_utcareers.DTOs.PaginatedResponse\u00601[[dotnet_utcareers.DTOs.CompanyDto, dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -94,14 +105,74 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "company",
-        "Type": "dotnet_utcareers.Models.Company",
-        "IsRequired": true
+        "Name": "Name",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Email",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Phone",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Website",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Logo",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Location",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Description",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "ContentType",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "ContentDisposition",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Headers",
+        "Type": "Microsoft.AspNetCore.Http.IHeaderDictionary",
+        "IsRequired": false
+      },
+      {
+        "Name": "Length",
+        "Type": "System.Int64",
+        "IsRequired": false
+      },
+      {
+        "Name": "Name",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "FileName",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[dotnet_utcareers.Models.Company, dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[dotnet_utcareers.DTOs.CompanyDto, dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -127,7 +198,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[dotnet_utcareers.Models.Company, dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[dotnet_utcareers.DTOs.CompanyDto, dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -151,14 +222,74 @@
         "IsRequired": true
       },
       {
-        "Name": "company",
-        "Type": "dotnet_utcareers.Models.Company",
-        "IsRequired": true
+        "Name": "Name",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Email",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Phone",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Website",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Logo",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Location",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Description",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "ContentType",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "ContentDisposition",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Headers",
+        "Type": "Microsoft.AspNetCore.Http.IHeaderDictionary",
+        "IsRequired": false
+      },
+      {
+        "Name": "Length",
+        "Type": "System.Int64",
+        "IsRequired": false
+      },
+      {
+        "Name": "Name",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "FileName",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[dotnet_utcareers.Models.Company, dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[dotnet_utcareers.DTOs.CompanyDto, dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -184,7 +315,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "dotnet_utcareers.Controllers.ApiResponse",
+        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -195,16 +326,48 @@
     ]
   },
   {
+    "ContainingType": "dotnet_utcareers.Controllers.CompaniesController",
+    "Method": "UploadLogo",
+    "RelativePath": "api/Companies/{id}/upload-logo",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "logo",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "dotnet_utcareers.Controllers.JobCategoriesController",
     "Method": "GetJobCategories",
     "RelativePath": "api/JobCategories",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "per_page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": [
       {
-        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[System.Collections.Generic.IEnumerable\u00601[[dotnet_utcareers.Models.JobCategory, dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[dotnet_utcareers.DTOs.PaginatedResponse\u00601[[dotnet_utcareers.DTOs.JobCategoryDto, dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -223,14 +386,14 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "jobCategory",
-        "Type": "dotnet_utcareers.Models.JobCategory",
+        "Name": "createDto",
+        "Type": "dotnet_utcareers.DTOs.CreateJobCategoryDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[dotnet_utcareers.Models.JobCategory, dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[dotnet_utcareers.DTOs.JobCategoryDto, dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -256,7 +419,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[dotnet_utcareers.Models.JobCategory, dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[dotnet_utcareers.DTOs.JobCategoryDto, dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -280,14 +443,14 @@
         "IsRequired": true
       },
       {
-        "Name": "jobCategory",
-        "Type": "dotnet_utcareers.Models.JobCategory",
+        "Name": "updateDto",
+        "Type": "dotnet_utcareers.DTOs.UpdateJobCategoryDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[dotnet_utcareers.Models.JobCategory, dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[dotnet_utcareers.DTOs.JobCategoryDto, dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -313,7 +476,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "dotnet_utcareers.Controllers.ApiResponse",
+        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -330,10 +493,21 @@
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "per_page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": [
       {
-        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[System.Collections.Generic.IEnumerable\u00601[[dotnet_utcareers.Models.JobPost, dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[dotnet_utcareers.DTOs.PaginatedResponse\u00601[[dotnet_utcareers.DTOs.JobPostDto, dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -352,14 +526,84 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "jobPost",
-        "Type": "dotnet_utcareers.Models.JobPost",
-        "IsRequired": true
+        "Name": "CompanyId",
+        "Type": "System.Guid",
+        "IsRequired": false
+      },
+      {
+        "Name": "Title",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Thumbnail",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Description",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Requirements",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Benefits",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Type",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Status",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "JobCategoryIds",
+        "Type": "System.Collections.Generic.List\u00601[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "ContentType",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "ContentDisposition",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Headers",
+        "Type": "Microsoft.AspNetCore.Http.IHeaderDictionary",
+        "IsRequired": false
+      },
+      {
+        "Name": "Length",
+        "Type": "System.Int64",
+        "IsRequired": false
+      },
+      {
+        "Name": "Name",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "FileName",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[dotnet_utcareers.Models.JobPost, dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[dotnet_utcareers.DTOs.JobPostDto, dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -385,7 +629,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[dotnet_utcareers.Models.JobPost, dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[dotnet_utcareers.DTOs.JobPostDto, dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -409,14 +653,84 @@
         "IsRequired": true
       },
       {
-        "Name": "jobPost",
-        "Type": "dotnet_utcareers.Models.JobPost",
-        "IsRequired": true
+        "Name": "CompanyId",
+        "Type": "System.Guid",
+        "IsRequired": false
+      },
+      {
+        "Name": "Title",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Thumbnail",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Description",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Requirements",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Benefits",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Type",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Status",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "JobCategoryIds",
+        "Type": "System.Collections.Generic.List\u00601[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "ContentType",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "ContentDisposition",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Headers",
+        "Type": "Microsoft.AspNetCore.Http.IHeaderDictionary",
+        "IsRequired": false
+      },
+      {
+        "Name": "Length",
+        "Type": "System.Int64",
+        "IsRequired": false
+      },
+      {
+        "Name": "Name",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "FileName",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[dotnet_utcareers.Models.JobPost, dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[dotnet_utcareers.DTOs.JobPostDto, dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -442,7 +756,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "dotnet_utcareers.Controllers.ApiResponse",
+        "Type": "dotnet_utcareers.Controllers.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -451,6 +765,178 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "dotnet_utcareers.Controllers.JobPostsController",
+    "Method": "UploadThumbnail",
+    "RelativePath": "api/JobPosts/{id}/upload-thumbnail",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "thumbnail",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "dotnet_utcareers.Controllers.UsersController",
+    "Method": "GetUsers",
+    "RelativePath": "api/Users",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[dotnet_utcareers.DTOs.UserDto, dotnet-utcareers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "dotnet_utcareers.Controllers.UsersController",
+    "Method": "PostUser",
+    "RelativePath": "api/Users",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "createDto",
+        "Type": "dotnet_utcareers.DTOs.CreateUserDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "dotnet_utcareers.DTOs.UserDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "dotnet_utcareers.Controllers.UsersController",
+    "Method": "GetUser",
+    "RelativePath": "api/Users/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "dotnet_utcareers.DTOs.UserDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "dotnet_utcareers.Controllers.UsersController",
+    "Method": "PutUser",
+    "RelativePath": "api/Users/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "updateDto",
+        "Type": "dotnet_utcareers.DTOs.UpdateUserDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "dotnet_utcareers.Controllers.UsersController",
+    "Method": "DeleteUser",
+    "RelativePath": "api/Users/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "dotnet_utcareers.Controllers.UsersController",
+    "Method": "ChangePassword",
+    "RelativePath": "api/Users/{id}/change-password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "changePasswordDto",
+        "Type": "dotnet_utcareers.DTOs.ChangePasswordDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "dotnet_utcareers.Controllers.UsersController",
+    "Method": "UploadPhoto",
+    "RelativePath": "api/Users/{id}/upload-photo",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "photo",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "dotnet_utcareers.Controllers.WeatherForecastController",

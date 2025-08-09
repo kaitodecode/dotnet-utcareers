@@ -8,8 +8,10 @@ namespace dotnet_utcareers.DTOs
         public string Name { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string Phone { get; set; } = null!;
-        public string Website { get; set; } = null!;
-        public string Address { get; set; } = null!;
+        public string? Website { get; set; }
+        public string? Logo { get; set; }
+        public string Location { get; set; } = null!;
+        public string? Description { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
     }
@@ -28,13 +30,19 @@ namespace dotnet_utcareers.DTOs
         [Phone(ErrorMessage = "Invalid phone format")]
         public string Phone { get; set; } = null!;
 
-        [Required(ErrorMessage = "Website is required")]
         [Url(ErrorMessage = "Invalid website URL format")]
+        [Required(ErrorMessage = "Website is required")]
         public string Website { get; set; } = null!;
 
-        [Required(ErrorMessage = "Address is required")]
-        [StringLength(500, ErrorMessage = "Address cannot exceed 500 characters")]
-        public string Address { get; set; } = null!;
+        [Required(ErrorMessage = "Logo is required")]
+        public IFormFile? Logo { get; set; }
+
+        [Required(ErrorMessage = "Location is required")]
+        [StringLength(500, ErrorMessage = "Location cannot exceed 500 characters")]
+        public string Location { get; set; } = null!;
+
+        [StringLength(1000, ErrorMessage = "Description cannot exceed 1000 characters")]
+        public string? Description { get; set; }
     }
 
     public class UpdateCompanyDto
@@ -51,12 +59,17 @@ namespace dotnet_utcareers.DTOs
         [Phone(ErrorMessage = "Invalid phone format")]
         public string Phone { get; set; } = null!;
 
-        [Required(ErrorMessage = "Website is required")]
         [Url(ErrorMessage = "Invalid website URL format")]
-        public string Website { get; set; } = null!;
+        public string? Website { get; set; }
 
-        [Required(ErrorMessage = "Address is required")]
-        [StringLength(500, ErrorMessage = "Address cannot exceed 500 characters")]
-        public string Address { get; set; } = null!;
+        
+        public IFormFile? Logo { get; set; }
+
+        [Required(ErrorMessage = "Location is required")]
+        [StringLength(500, ErrorMessage = "Location cannot exceed 500 characters")]
+        public string Location { get; set; } = null!;
+
+        [StringLength(1000, ErrorMessage = "Description cannot exceed 1000 characters")]
+        public string? Description { get; set; }
     }
 }

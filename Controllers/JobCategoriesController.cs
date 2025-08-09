@@ -18,28 +18,45 @@ namespace dotnet_utcareers.Controllers
     [Authorize]
     public class JobCategoriesController : ControllerBase
     {
-        private readonly UTCarreersContext _context;
+        private readonly UTCareersContext _context;
 
-        public JobCategoriesController(UTCarreersContext context)
+        public JobCategoriesController(UTCareersContext context)
         {
             _context = context;
         }
 
         // GET: api/JobCategories
         [HttpGet]
-        public async Task<ActionResult<ApiResponse<IEnumerable<JobCategoryDto>>>> GetJobCategories()
+        public async Task<ActionResult<ApiResponse<PaginatedResponse<JobCategoryDto>>>> GetJobCategories(
+            [FromQuery] int page = 1,
+            [FromQuery] int per_page = 15)
         {
             try
             {
-                var jobCategories = await _context.JobCategories
-                    .Where(jc => jc.DeletedAt == null)
+                var query = _context.JobCategories
+                    .Where(jc => jc.DeletedAt == null);
+
+                var totalCount = await query.CountAsync();
+                
+                var jobCategories = await query
+                    .Skip((page - 1) * per_page)
+                    .Take(per_page)
                     .ToListAsync();
+                
                 var jobCategoryDtos = jobCategories.Select(jc => jc.ToDto());
-                return Ok(ApiResponse<IEnumerable<JobCategoryDto>>.SuccessResponse(jobCategoryDtos, "Job categories retrieved successfully"));
+                
+                var paginatedResponse = PaginationService.CreatePaginatedResponse(
+                    jobCategoryDtos,
+                    totalCount,
+                    page,
+                    per_page,
+                    Request);
+                
+                return Ok(ApiResponse<PaginatedResponse<JobCategoryDto>>.SuccessResponse(paginatedResponse, "Job categories retrieved successfully"));
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ApiResponse<IEnumerable<JobCategoryDto>>.ErrorResponse($"Internal server error: {ex.Message}"));
+                return StatusCode(500, ApiResponse<PaginatedResponse<JobCategoryDto>>.ErrorResponse($"Internal server error: {ex.Message}"));
             }
         }
 

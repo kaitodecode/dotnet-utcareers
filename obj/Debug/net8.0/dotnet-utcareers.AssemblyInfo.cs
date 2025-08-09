@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("dotnet-utcareers")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1d46ce409e320f84edf9e733accfa58636e46278")]
 [assembly: System.Reflection.AssemblyProductAttribute("dotnet-utcareers")]
 [assembly: System.Reflection.AssemblyTitleAttribute("dotnet-utcareers")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

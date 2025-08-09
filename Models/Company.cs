@@ -13,9 +13,13 @@ public partial class Company
 
     public string Phone { get; set; } = null!;
 
-    public string Website { get; set; } = null!;
+    public string? Website { get; set; }
 
-    public string Address { get; set; } = null!;
+    public string? Logo { get; set; }
+
+    public string Location { get; set; } = null!;
+
+    public string? Description { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 

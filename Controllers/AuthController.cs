@@ -14,10 +14,10 @@ namespace dotnet_utcareers.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly UTCarreersContext _context;
+        private readonly UTCareersContext _context;
         private readonly IConfiguration _configuration;
 
-        public AuthController(UTCarreersContext context, IConfiguration configuration)
+        public AuthController(UTCareersContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
@@ -109,6 +109,11 @@ namespace dotnet_utcareers.Controllers
                 if (user == null)
                 {
                     return NotFound(ApiResponse<UserResponse>.ErrorResponse("User not found"));
+                }
+
+                if (user.Role != "admin" && user.Role != "user")
+                {
+                    return Unauthorized(ApiResponse<UserResponse>.ErrorResponse("You are not authorized to access this resource"));
                 }
 
                 var response = new UserResponse

@@ -18,28 +18,47 @@ namespace dotnet_utcareers.Controllers
     [Authorize]
     public class CompaniesController : ControllerBase
     {
-        private readonly UTCarreersContext _context;
+        private readonly UTCareersContext _context;
+        private readonly ImageUploadService _imageUploadService;
 
-        public CompaniesController(UTCarreersContext context)
+        public CompaniesController(UTCareersContext context, ImageUploadService imageUploadService)
         {
             _context = context;
+            _imageUploadService = imageUploadService;
         }
 
         // GET: api/Companies
         [HttpGet]
-        public async Task<ActionResult<ApiResponse<IEnumerable<CompanyDto>>>> GetCompanies()
+        public async Task<ActionResult<ApiResponse<PaginatedResponse<CompanyDto>>>> GetCompanies(
+            [FromQuery] int page = 1,
+            [FromQuery] int per_page = 15)
         {
             try
             {
-                var companies = await _context.Companies
-                    .Where(c => c.DeletedAt == null)
+                var query = _context.Companies
+                    .Where(c => c.DeletedAt == null);
+
+                var totalCount = await query.CountAsync();
+                
+                var companies = await query
+                    .Skip((page - 1) * per_page)
+                    .Take(per_page)
                     .ToListAsync();
+                
                 var companyDtos = companies.Select(c => c.ToDto());
-                return Ok(ApiResponse<IEnumerable<CompanyDto>>.SuccessResponse(companyDtos, "Companies retrieved successfully"));
+                
+                var paginatedResponse = PaginationService.CreatePaginatedResponse(
+                    companyDtos,
+                    totalCount,
+                    page,
+                    per_page,
+                    Request);
+                
+                return Ok(ApiResponse<PaginatedResponse<CompanyDto>>.SuccessResponse(paginatedResponse, "Companies retrieved successfully"));
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ApiResponse<IEnumerable<CompanyDto>>.ErrorResponse($"Internal server error: {ex.Message}"));
+                return StatusCode(500, ApiResponse<PaginatedResponse<CompanyDto>>.ErrorResponse($"Internal server error: {ex.Message}"));
             }
         }
 
@@ -69,7 +88,7 @@ namespace dotnet_utcareers.Controllers
 
         // PUT: api/Companies/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<ApiResponse<CompanyDto>>> PutCompany(Guid id, UpdateCompanyDto updateDto)
+        public async Task<ActionResult<ApiResponse<CompanyDto>>> PutCompany(Guid id, [FromForm] UpdateCompanyDto updateDto)
         {
             try
             {
@@ -82,7 +101,28 @@ namespace dotnet_utcareers.Controllers
                     return NotFound(ApiResponse<CompanyDto>.ErrorResponse("Company not found"));
                 }
 
-                updateDto.UpdateModel(company);
+                // Update company properties
+                company.Name = updateDto.Name;
+                company.Description = updateDto.Description;
+                company.Email = updateDto.Email;
+                company.Phone = updateDto.Phone;
+                company.Location = updateDto.Location;
+                company.Website = updateDto.Website;
+                company.UpdatedAt = DateTime.UtcNow;
+
+                // Handle logo upload if provided
+                if (updateDto.Logo != null)
+                {
+                    // Delete old logo if exists
+                    if (!string.IsNullOrEmpty(company.Logo))
+                    {
+                        await _imageUploadService.DeleteImageAsync(company.Logo);
+                    }
+                    
+                    var logoUrl = await _imageUploadService.UploadImageAsync(updateDto.Logo, "companies");
+                    company.Logo = logoUrl;
+                }
+
                 await _context.SaveChangesAsync();
                 
                 var companyDto = company.ToDto();
@@ -107,11 +147,31 @@ namespace dotnet_utcareers.Controllers
 
         // POST: api/Companies
         [HttpPost]
-        public async Task<ActionResult<ApiResponse<CompanyDto>>> PostCompany(CreateCompanyDto createDto)
+        public async Task<ActionResult<ApiResponse<CompanyDto>>> PostCompany([FromForm] CreateCompanyDto createDto)
         {
             try
             {
-                var company = createDto.ToModel();
+
+                var company = new Company
+                {
+                    Id = Guid.NewGuid(),
+                    Name = createDto.Name,
+                    Description = createDto.Description,
+                    Email = createDto.Email,
+                    Phone = createDto.Phone,
+                    Location = createDto.Location,
+                    Website = createDto.Website,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow,
+                };
+
+                if (createDto.Logo != null)
+                {
+                    var logoUrl = await _imageUploadService.UploadImageAsync(createDto.Logo, "companies");
+                    company.Logo = logoUrl;
+                }
+
+
                 _context.Companies.Add(company);
                 await _context.SaveChangesAsync();
 
@@ -148,7 +208,44 @@ namespace dotnet_utcareers.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ApiResponse<object>.ErrorResponse($"Internal server error: {ex.Message}"));
+                 return StatusCode(500, ApiResponse<object>.ErrorResponse($"Internal server error: {ex.Message}"));
+             }
+         }
+
+        // POST: api/Companies/5/upload-logo
+        [HttpPost("{id}/upload-logo")]
+        public async Task<IActionResult> UploadLogo(Guid id, IFormFile logo)
+        {
+            var company = await _context.Companies.FindAsync(id);
+            if (company == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                // Delete old logo if exists
+                if (!string.IsNullOrEmpty(company.Logo))
+                {
+                    await _imageUploadService.DeleteImageAsync(company.Logo);
+                }
+
+                // Upload new logo
+                var logoUrl = await _imageUploadService.UploadImageAsync(logo, "companies");
+                company.Logo = logoUrl;
+                company.UpdatedAt = DateTime.UtcNow;
+
+                await _context.SaveChangesAsync();
+
+                return Ok(new { LogoUrl = logoUrl });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error uploading logo: {ex.Message}");
             }
         }
 

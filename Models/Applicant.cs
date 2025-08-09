@@ -9,7 +9,7 @@ public partial class Applicant
 
     public Guid UserId { get; set; }
 
-    public Guid JobId { get; set; }
+    public Guid JobPostCategoryId { get; set; }
 
     public string Status { get; set; } = null!;
 
@@ -23,7 +23,7 @@ public partial class Applicant
 
     public DateTime? DeletedAt { get; set; }
 
-    public virtual JobPost Job { get; set; } = null!;
+    public virtual JobPostCategory JobPostCategory { get; set; } = null!;
 
     public virtual ICollection<Selection> Selections { get; set; } = new List<Selection>();
 

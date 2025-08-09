@@ -18,30 +18,50 @@ namespace dotnet_utcareers.Controllers
     [Authorize]
     public class JobPostsController : ControllerBase
     {
-        private readonly UTCarreersContext _context;
+        private readonly UTCareersContext _context;
+        private readonly ImageUploadService _imageUploadService;
 
-        public JobPostsController(UTCarreersContext context)
+        public JobPostsController(UTCareersContext context, ImageUploadService imageUploadService)
         {
             _context = context;
+            _imageUploadService = imageUploadService;
         }
 
         // GET: api/JobPosts
         [HttpGet]
-        public async Task<ActionResult<ApiResponse<IEnumerable<JobPostDto>>>> GetJobPosts()
+        public async Task<ActionResult<ApiResponse<PaginatedResponse<JobPostDto>>>> GetJobPosts(
+            [FromQuery] int page = 1,
+            [FromQuery] int per_page = 15)
         {
             try
             {
-                var jobPosts = await _context.JobPosts
+                var query = _context.JobPosts
                     .Include(jp => jp.Company)
-                    .Include(jp => jp.JobCategories)
-                    .Where(jp => jp.DeletedAt == null)
+                    .Include(jp => jp.JobPostCategories)
+                        .ThenInclude(jpc => jpc.JobCategory)
+                    .Where(jp => jp.DeletedAt == null);
+
+                var totalCount = await query.CountAsync();
+                
+                var jobPosts = await query
+                    .Skip((page - 1) * per_page)
+                    .Take(per_page)
                     .ToListAsync();
+                
                 var jobPostDtos = jobPosts.Select(jp => jp.ToDto());
-                return Ok(ApiResponse<IEnumerable<JobPostDto>>.SuccessResponse(jobPostDtos, "Data job posts berhasil diambil"));
+                
+                var paginatedResponse = PaginationService.CreatePaginatedResponse(
+                    jobPostDtos,
+                    totalCount,
+                    page,
+                    per_page,
+                    Request);
+                
+                return Ok(ApiResponse<PaginatedResponse<JobPostDto>>.SuccessResponse(paginatedResponse, "Data job posts berhasil diambil"));
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ApiResponse<IEnumerable<JobPostDto>>.ErrorResponse($"Terjadi kesalahan: {ex.Message}"));
+                return StatusCode(500, ApiResponse<PaginatedResponse<JobPostDto>>.ErrorResponse($"Terjadi kesalahan: {ex.Message}"));
             }
         }
 
@@ -53,7 +73,8 @@ namespace dotnet_utcareers.Controllers
             {
                 var jobPost = await _context.JobPosts
                     .Include(jp => jp.Company)
-                    .Include(jp => jp.JobCategories)
+                    .Include(jp => jp.JobPostCategories)
+                        .ThenInclude(jpc => jpc.JobCategory)
                     .Where(jp => jp.Id == id && jp.DeletedAt == null)
                     .FirstOrDefaultAsync();
 
@@ -73,12 +94,11 @@ namespace dotnet_utcareers.Controllers
 
         // PUT: api/JobPosts/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<ApiResponse<JobPostDto>>> PutJobPost(Guid id, UpdateJobPostDto updateDto)
+        public async Task<ActionResult<ApiResponse<JobPostDto>>> PutJobPost(Guid id, [FromForm] UpdateJobPostDto updateDto)
         {
             try
             {
                 var jobPost = await _context.JobPosts
-                    .Include(jp => jp.JobCategories)
                     .Where(jp => jp.Id == id && jp.DeletedAt == null)
                     .FirstOrDefaultAsync();
 
@@ -87,21 +107,33 @@ namespace dotnet_utcareers.Controllers
                     return NotFound(ApiResponse<JobPostDto>.ErrorResponse("Job post tidak ditemukan"));
                 }
 
-                // Update job categories if provided
-                if (updateDto.JobCategoryIds != null && updateDto.JobCategoryIds.Any())
+                // Handle thumbnail update if provided
+                if (updateDto.Thumbnail != null)
                 {
-                    var jobCategories = await _context.JobCategories
-                        .Where(jc => updateDto.JobCategoryIds.Contains(jc.Id))
-                        .ToListAsync();
-                    jobPost.JobCategories = jobCategories;
+                    // Delete old thumbnail if exists
+                    if (!string.IsNullOrEmpty(jobPost.Thumbnail))
+                    {
+                        await _imageUploadService.DeleteImageAsync(jobPost.Thumbnail);
+                    }
+
+                    // Upload new thumbnail
+                    var thumbnailUrl = await _imageUploadService.UploadImageAsync(updateDto.Thumbnail, "jobposts");
+                    jobPost.Thumbnail = thumbnailUrl;
                 }
 
-                updateDto.UpdateModel(jobPost);
+
+                // Update basic properties
+                jobPost.Title = updateDto.Title;
+                jobPost.Status = updateDto.Status;
+                jobPost.UpdatedAt = DateTime.UtcNow;
+
                 await _context.SaveChangesAsync();
                 
                 // Reload with includes for DTO conversion
                 await _context.Entry(jobPost)
-                    .Collection(jp => jp.JobCategories)
+                    .Collection(jp => jp.JobPostCategories)
+                    .Query()
+                    .Include(jpc => jpc.JobCategory)
                     .LoadAsync();
                 await _context.Entry(jobPost)
                     .Reference(jp => jp.Company)
@@ -126,30 +158,33 @@ namespace dotnet_utcareers.Controllers
                 return StatusCode(500, ApiResponse<JobPostDto>.ErrorResponse($"Terjadi kesalahan: {ex.Message}"));
             }
         }
-
         // POST: api/JobPosts
         [HttpPost]
-        public async Task<ActionResult<ApiResponse<JobPostDto>>> PostJobPost(CreateJobPostDto createDto)
+        public async Task<ActionResult<ApiResponse<JobPostDto>>> PostJobPost([FromForm] CreateJobPostDto createDto)
         {
             try
             {
-                var jobPost = createDto.ToModel();
-                
-                // Add job categories if provided
-                if (createDto.JobCategoryIds != null && createDto.JobCategoryIds.Any())
+                var imageUrl = await _imageUploadService.UploadImageAsync(createDto.Thumbnail, "jobposts");
+
+                var jobPost = new JobPost
                 {
-                    var jobCategories = await _context.JobCategories
-                        .Where(jc => createDto.JobCategoryIds.Contains(jc.Id))
-                        .ToListAsync();
-                    jobPost.JobCategories = jobCategories;
-                }
-                
+                    Id = Guid.NewGuid(),
+                    CompanyId = createDto.CompanyId,
+                    Title = createDto.Title,
+                    Thumbnail = imageUrl,
+                    Status = createDto.Status,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                };
+
                 _context.JobPosts.Add(jobPost);
                 await _context.SaveChangesAsync();
 
                 // Load includes for DTO conversion
                 await _context.Entry(jobPost)
-                    .Collection(jp => jp.JobCategories)
+                    .Collection(jp => jp.JobPostCategories)
+                    .Query()
+                    .Include(jpc => jpc.JobCategory)
                     .LoadAsync();
                 await _context.Entry(jobPost)
                     .Reference(jp => jp.Company)
@@ -189,6 +224,43 @@ namespace dotnet_utcareers.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, ApiResponse<object>.ErrorResponse($"Terjadi kesalahan: {ex.Message}"));
+            }
+        }
+
+        // POST: api/JobPosts/5/upload-thumbnail
+        [HttpPost("{id}/upload-thumbnail")]
+        public async Task<IActionResult> UploadThumbnail(Guid id, IFormFile thumbnail)
+        {
+            var jobPost = await _context.JobPosts.FindAsync(id);
+            if (jobPost == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                // Delete old thumbnail if exists
+                if (!string.IsNullOrEmpty(jobPost.Thumbnail))
+                {
+                    await _imageUploadService.DeleteImageAsync(jobPost.Thumbnail);
+                }
+
+                // Upload new thumbnail
+                var thumbnailUrl = await _imageUploadService.UploadImageAsync(thumbnail, "jobposts");
+                jobPost.Thumbnail = thumbnailUrl;
+                jobPost.UpdatedAt = DateTime.UtcNow;
+
+                await _context.SaveChangesAsync();
+
+                return Ok(new { ThumbnailUrl = thumbnailUrl });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error uploading thumbnail: {ex.Message}");
             }
         }
 

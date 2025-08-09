@@ -9,7 +9,7 @@ public partial class Selection
 
     public Guid ApplicantId { get; set; }
 
-    public Guid JobId { get; set; }
+    public Guid JobPostCategoryId { get; set; }
 
     public string Stage { get; set; } = null!;
 
@@ -25,5 +25,5 @@ public partial class Selection
 
     public virtual Applicant Applicant { get; set; } = null!;
 
-    public virtual JobPost Job { get; set; } = null!;
+    public virtual JobPostCategory JobPostCategory { get; set; } = null!;
 }

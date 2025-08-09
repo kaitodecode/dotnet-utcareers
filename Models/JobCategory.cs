@@ -15,5 +15,5 @@ public partial class JobCategory
 
     public DateTime? DeletedAt { get; set; }
 
-    public virtual ICollection<JobPost> JobPosts { get; set; } = new List<JobPost>();
+    public virtual ICollection<JobPostCategory> JobPostCategories { get; set; } = new List<JobPostCategory>();
 }
