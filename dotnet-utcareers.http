@@ -1,0 +1,6 @@
+@dotnet_utcareers_HostAddress = http://localhost:5100
+
+GET {{dotnet_utcareers_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
