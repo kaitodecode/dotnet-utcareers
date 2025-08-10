@@ -31,12 +31,22 @@ namespace dotnet_utcareers.Controllers
         [HttpGet]
         public async Task<ActionResult<ApiResponse<PaginatedResponse<CompanyDto>>>> GetCompanies(
             [FromQuery] int page = 1,
-            [FromQuery] int per_page = 15)
+            [FromQuery] int per_page = 15,
+            [FromQuery] string search = null)
         {
             try
             {
                 var query = _context.Companies
                     .Where(c => c.DeletedAt == null);
+
+                // Apply search filter if search parameter is provided
+                if (!string.IsNullOrWhiteSpace(search))
+                {
+                    search = search.ToLower();
+                    query = query.Where(c =>
+                        c.Name.ToLower().Contains(search)
+                    );
+                }
 
                 var totalCount = await query.CountAsync();
                 
@@ -44,7 +54,7 @@ namespace dotnet_utcareers.Controllers
                     .Skip((page - 1) * per_page)
                     .Take(per_page)
                     .ToListAsync();
-                
+
                 var companyDtos = companies.Select(c => c.ToDto());
                 
                 var paginatedResponse = PaginationService.CreatePaginatedResponse(
@@ -61,7 +71,6 @@ namespace dotnet_utcareers.Controllers
                 return StatusCode(500, ApiResponse<PaginatedResponse<CompanyDto>>.ErrorResponse($"Internal server error: {ex.Message}"));
             }
         }
-
         // GET: api/Companies/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ApiResponse<CompanyDto>>> GetCompany(Guid id)

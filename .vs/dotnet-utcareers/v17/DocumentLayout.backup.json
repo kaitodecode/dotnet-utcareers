@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\IT CLASS\\Documents\\Projects\\ujikom\\dotnet-utcareers\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{5F684495-794A-470E-97F8-D574ED93DB47}|dotnet-utcareers.csproj|c:\\users\\it class\\documents\\projects\\ujikom\\dotnet-utcareers\\controllers\\companiescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5F684495-794A-470E-97F8-D574ED93DB47}|dotnet-utcareers.csproj|solutionrelative:controllers\\companiescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{5F684495-794A-470E-97F8-D574ED93DB47}|dotnet-utcareers.csproj|c:\\users\\it class\\documents\\projects\\ujikom\\dotnet-utcareers\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{5F684495-794A-470E-97F8-D574ED93DB47}|dotnet-utcareers.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
@@ -13,10 +17,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{5F684495-794A-470E-97F8-D574ED93DB47}|dotnet-utcareers.csproj|c:\\users\\it class\\documents\\projects\\ujikom\\dotnet-utcareers\\controllers\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5F684495-794A-470E-97F8-D574ED93DB47}|dotnet-utcareers.csproj|solutionrelative:controllers\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5F684495-794A-470E-97F8-D574ED93DB47}|dotnet-utcareers.csproj|c:\\users\\it class\\documents\\projects\\ujikom\\dotnet-utcareers\\controllers\\companiescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5F684495-794A-470E-97F8-D574ED93DB47}|dotnet-utcareers.csproj|solutionrelative:controllers\\companiescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{5F684495-794A-470E-97F8-D574ED93DB47}|dotnet-utcareers.csproj|c:\\users\\it class\\documents\\projects\\ujikom\\dotnet-utcareers\\controllers\\jobcategoriescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -50,11 +50,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "AuthController.cs",
               "DocumentMoniker": "C:\\Users\\IT CLASS\\Documents\\Projects\\ujikom\\dotnet-utcareers\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
@@ -80,20 +80,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "CompaniesController.cs",
               "DocumentMoniker": "C:\\Users\\IT CLASS\\Documents\\Projects\\ujikom\\dotnet-utcareers\\Controllers\\CompaniesController.cs",
               "RelativeDocumentMoniker": "Controllers\\CompaniesController.cs",
               "ToolTip": "C:\\Users\\IT CLASS\\Documents\\Projects\\ujikom\\dotnet-utcareers\\Controllers\\CompaniesController.cs",
               "RelativeToolTip": "Controllers\\CompaniesController.cs",
-              "ViewState": "AgIAABgAAAAAAAAAAAAQwBkAAAAfAAAAAAAAAA==",
+              "ViewState": "AgIAABwAAAAAAAAAAAAUwDcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-09T04:01:03.65Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "ApiResponse.cs",
               "DocumentMoniker": "C:\\Users\\IT CLASS\\Documents\\Projects\\ujikom\\dotnet-utcareers\\Controllers\\ApiResponse.cs",
               "RelativeDocumentMoniker": "Controllers\\ApiResponse.cs",
@@ -106,13 +106,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\IT CLASS\\Documents\\Projects\\ujikom\\dotnet-utcareers\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
               "ToolTip": "C:\\Users\\IT CLASS\\Documents\\Projects\\ujikom\\dotnet-utcareers\\appsettings.json",
               "RelativeToolTip": "appsettings.json",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAQwBQAAAA6AAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2025-08-08T23:58:09.16Z",
               "EditorCaption": ""
@@ -177,7 +177,7 @@
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\IT CLASS\\Documents\\Projects\\ujikom\\dotnet-utcareers\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAA3AAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAA3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-08T23:58:50.589Z",
               "EditorCaption": ""

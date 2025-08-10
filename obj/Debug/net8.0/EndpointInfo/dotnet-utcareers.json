@@ -134,6 +134,13 @@
               "format": "int32",
               "default": 15
             }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -165,19 +172,73 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/CreateCompanyDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateCompanyDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateCompanyDto"
+                "required": [
+                  "Email",
+                  "Location",
+                  "Logo",
+                  "Name",
+                  "Phone",
+                  "Website"
+                ],
+                "type": "object",
+                "properties": {
+                  "Name": {
+                    "maxLength": 100,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "Email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "Phone": {
+                    "type": "string",
+                    "format": "tel"
+                  },
+                  "Website": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "Logo": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "Location": {
+                    "maxLength": 500,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "Description": {
+                    "maxLength": 1000,
+                    "minLength": 0,
+                    "type": "string"
+                  }
+                }
+              },
+              "encoding": {
+                "Name": {
+                  "style": "form"
+                },
+                "Email": {
+                  "style": "form"
+                },
+                "Phone": {
+                  "style": "form"
+                },
+                "Website": {
+                  "style": "form"
+                },
+                "Logo": {
+                  "style": "form"
+                },
+                "Location": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -262,19 +323,71 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateCompanyDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateCompanyDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateCompanyDto"
+                "required": [
+                  "Email",
+                  "Location",
+                  "Name",
+                  "Phone"
+                ],
+                "type": "object",
+                "properties": {
+                  "Name": {
+                    "maxLength": 100,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "Email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "Phone": {
+                    "type": "string",
+                    "format": "tel"
+                  },
+                  "Website": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "Logo": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "Location": {
+                    "maxLength": 500,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "Description": {
+                    "maxLength": 1000,
+                    "minLength": 0,
+                    "type": "string"
+                  }
+                }
+              },
+              "encoding": {
+                "Name": {
+                  "style": "form"
+                },
+                "Email": {
+                  "style": "form"
+                },
+                "Phone": {
+                  "style": "form"
+                },
+                "Website": {
+                  "style": "form"
+                },
+                "Logo": {
+                  "style": "form"
+                },
+                "Location": {
+                  "style": "form"
+                },
+                "Description": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -668,19 +781,48 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/CreateJobPostDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateJobPostDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateJobPostDto"
+                "required": [
+                  "CompanyId",
+                  "Status",
+                  "Thumbnail",
+                  "Title"
+                ],
+                "type": "object",
+                "properties": {
+                  "CompanyId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "Title": {
+                    "maxLength": 200,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "Thumbnail": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "Status": {
+                    "pattern": "^(active|closed)$",
+                    "type": "string"
+                  }
+                }
+              },
+              "encoding": {
+                "CompanyId": {
+                  "style": "form"
+                },
+                "Title": {
+                  "style": "form"
+                },
+                "Thumbnail": {
+                  "style": "form"
+                },
+                "Status": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -765,19 +907,58 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateJobPostDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateJobPostDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateJobPostDto"
+                "required": [
+                  "CompanyId",
+                  "Status",
+                  "Thumbnail",
+                  "Title"
+                ],
+                "type": "object",
+                "properties": {
+                  "CompanyId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "Title": {
+                    "maxLength": 200,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "Thumbnail": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "Status": {
+                    "pattern": "^(active|closed)$",
+                    "type": "string"
+                  },
+                  "JobCategoryIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uuid"
+                    }
+                  }
+                }
+              },
+              "encoding": {
+                "CompanyId": {
+                  "style": "form"
+                },
+                "Title": {
+                  "style": "form"
+                },
+                "Thumbnail": {
+                  "style": "form"
+                },
+                "Status": {
+                  "style": "form"
+                },
+                "JobCategoryIds": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -1383,53 +1564,6 @@
         },
         "additionalProperties": false
       },
-      "CreateCompanyDto": {
-        "required": [
-          "email",
-          "location",
-          "name",
-          "phone"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "maxLength": 100,
-            "minLength": 0,
-            "type": "string"
-          },
-          "email": {
-            "minLength": 1,
-            "type": "string",
-            "format": "email"
-          },
-          "phone": {
-            "minLength": 1,
-            "type": "string",
-            "format": "tel"
-          },
-          "website": {
-            "type": "string",
-            "format": "uri",
-            "nullable": true
-          },
-          "logo": {
-            "type": "string",
-            "nullable": true
-          },
-          "location": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string"
-          },
-          "description": {
-            "maxLength": 1000,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "CreateJobCategoryDto": {
         "required": [
           "name"
@@ -1440,67 +1574,6 @@
             "maxLength": 100,
             "minLength": 0,
             "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "CreateJobPostDto": {
-        "required": [
-          "benefits",
-          "companyId",
-          "description",
-          "requirements",
-          "status",
-          "title",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "companyId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "title": {
-            "maxLength": 200,
-            "minLength": 0,
-            "type": "string"
-          },
-          "thumbnail": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "maxLength": 2000,
-            "minLength": 0,
-            "type": "string"
-          },
-          "requirements": {
-            "maxLength": 1000,
-            "minLength": 0,
-            "type": "string"
-          },
-          "benefits": {
-            "maxLength": 1000,
-            "minLength": 0,
-            "type": "string"
-          },
-          "type": {
-            "maxLength": 50,
-            "minLength": 0,
-            "type": "string"
-          },
-          "status": {
-            "maxLength": 50,
-            "minLength": 0,
-            "type": "string"
-          },
-          "jobCategoryIds": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1695,22 +1768,6 @@
             "nullable": true
           },
           "thumbnail": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "requirements": {
-            "type": "string",
-            "nullable": true
-          },
-          "benefits": {
-            "type": "string",
-            "nullable": true
-          },
-          "type": {
             "type": "string",
             "nullable": true
           },
@@ -1930,53 +1987,6 @@
         },
         "additionalProperties": false
       },
-      "UpdateCompanyDto": {
-        "required": [
-          "email",
-          "location",
-          "name",
-          "phone"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "maxLength": 100,
-            "minLength": 0,
-            "type": "string"
-          },
-          "email": {
-            "minLength": 1,
-            "type": "string",
-            "format": "email"
-          },
-          "phone": {
-            "minLength": 1,
-            "type": "string",
-            "format": "tel"
-          },
-          "website": {
-            "type": "string",
-            "format": "uri",
-            "nullable": true
-          },
-          "logo": {
-            "type": "string",
-            "nullable": true
-          },
-          "location": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string"
-          },
-          "description": {
-            "maxLength": 1000,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "UpdateJobCategoryDto": {
         "required": [
           "name"
@@ -1987,67 +1997,6 @@
             "maxLength": 100,
             "minLength": 0,
             "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "UpdateJobPostDto": {
-        "required": [
-          "benefits",
-          "companyId",
-          "description",
-          "requirements",
-          "status",
-          "title",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "companyId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "title": {
-            "maxLength": 200,
-            "minLength": 0,
-            "type": "string"
-          },
-          "thumbnail": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "maxLength": 2000,
-            "minLength": 0,
-            "type": "string"
-          },
-          "requirements": {
-            "maxLength": 1000,
-            "minLength": 0,
-            "type": "string"
-          },
-          "benefits": {
-            "maxLength": 1000,
-            "minLength": 0,
-            "type": "string"
-          },
-          "type": {
-            "maxLength": 50,
-            "minLength": 0,
-            "type": "string"
-          },
-          "status": {
-            "maxLength": 50,
-            "minLength": 0,
-            "type": "string"
-          },
-          "jobCategoryIds": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "nullable": true
           }
         },
         "additionalProperties": false

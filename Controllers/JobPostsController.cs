@@ -31,7 +31,8 @@ namespace dotnet_utcareers.Controllers
         [HttpGet]
         public async Task<ActionResult<ApiResponse<PaginatedResponse<JobPostDto>>>> GetJobPosts(
             [FromQuery] int page = 1,
-            [FromQuery] int per_page = 15)
+            [FromQuery] int per_page = 15,
+            [FromQuery] string search = null)
         {
             try
             {
@@ -40,6 +41,16 @@ namespace dotnet_utcareers.Controllers
                     .Include(jp => jp.JobPostCategories)
                         .ThenInclude(jpc => jpc.JobCategory)
                     .Where(jp => jp.DeletedAt == null);
+
+                // Apply search filter if search parameter is provided
+                if (!string.IsNullOrWhiteSpace(search))
+                {
+                    search = search.ToLower();
+                    query = query.Where(jp =>
+                        jp.Title.ToLower().Contains(search) ||
+                        jp.Company.Name.ToLower().Contains(search)
+                    );
+                }
 
                 var totalCount = await query.CountAsync();
                 

@@ -22,10 +22,39 @@ namespace dotnet_utcareers.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers(
+            [FromQuery] int page = 1,
+            [FromQuery] int per_page = 15,
+            [FromQuery] string search = null)
         {
-            var users = await _context.Users.ToListAsync();
-            return Ok(users.Select(u => u.ToDto()));
+            var query = _context.Users.Where(u => u.DeletedAt == null);
+
+            // Apply search filter if search parameter is provided
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.ToLower();
+                query = query.Where(u =>
+                    u.Name.ToLower().Contains(search) ||
+                    u.Email.ToLower().Contains(search)
+                );
+            }
+
+            var totalCount = await query.CountAsync();
+
+            var users = await query
+                .Skip((page - 1) * per_page)
+                .Take(per_page)
+                .ToListAsync();
+
+            var userDtos = users.Select(u => u.ToDto()).ToList();
+
+            return Ok(new PaginatedResponse<UserDto>
+            {
+                Data = userDtos,
+                Total = totalCount,
+                PerPage = per_page,
+                CurrentPage = page
+            });
         }
 
         // GET: api/Users/5

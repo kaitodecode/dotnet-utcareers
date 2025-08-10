@@ -29,12 +29,22 @@ namespace dotnet_utcareers.Controllers
         [HttpGet]
         public async Task<ActionResult<ApiResponse<PaginatedResponse<JobCategoryDto>>>> GetJobCategories(
             [FromQuery] int page = 1,
-            [FromQuery] int per_page = 15)
+            [FromQuery] int per_page = 15,
+            [FromQuery] string search = null)
         {
             try
             {
                 var query = _context.JobCategories
                     .Where(jc => jc.DeletedAt == null);
+
+                // Apply search filter if search parameter is provided
+                if (!string.IsNullOrWhiteSpace(search))
+                {
+                    search = search.ToLower();
+                    query = query.Where(jc =>
+                        jc.Name.ToLower().Contains(search)
+                    );
+                }
 
                 var totalCount = await query.CountAsync();
                 
