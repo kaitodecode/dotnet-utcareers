@@ -250,4 +250,3 @@ C:\Users\IT CLASS\Documents\Projects\ujikom\dotnet-utcareers\obj\Debug\net8.0\re
 C:\Users\IT CLASS\Documents\Projects\ujikom\dotnet-utcareers\bin\Debug\net8.0\AWSSDK.Core.dll
 C:\Users\IT CLASS\Documents\Projects\ujikom\dotnet-utcareers\bin\Debug\net8.0\AWSSDK.Extensions.NETCore.Setup.dll
 C:\Users\IT CLASS\Documents\Projects\ujikom\dotnet-utcareers\bin\Debug\net8.0\AWSSDK.S3.dll
-C:\Users\IT CLASS\Documents\Projects\ujikom\dotnet-utcareers\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

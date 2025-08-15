@@ -138,6 +138,63 @@ namespace dotnet_utcareers.Controllers
                 jobPost.Status = updateDto.Status;
                 jobPost.UpdatedAt = DateTime.UtcNow;
 
+                // Update job categories
+                if (updateDto.JobCategories != null && updateDto.JobCategories.Count > 0)
+                {
+                    var jobCategories = updateDto.JobCategories;
+
+                    // Get existing categories that are not in the update
+                    var newCategoryIds = jobCategories.Select(c => c.JobCategoryId).ToList();
+                    var categoriesToRemove = jobPost.JobPostCategories
+                        .Where(jpc => !newCategoryIds.Contains(jpc.JobCategoryId))
+                        .ToList();
+
+                    // Remove only categories that are no longer needed
+                    if (categoriesToRemove.Any())
+                    {
+                        _context.JobPostCategories.RemoveRange(categoriesToRemove);
+                    }
+                    
+                    // Add or update categories
+                    foreach (var categoryDto in jobCategories)
+                    {
+                        var existingCategory = jobPost.JobPostCategories
+                            .FirstOrDefault(jpc => jpc.JobCategoryId == categoryDto.JobCategoryId);
+
+                        if (existingCategory != null)
+                        {
+                            // Update existing category
+                            existingCategory.Type = categoryDto.Type;
+                            existingCategory.RequiredCount = categoryDto.RequiredCount;
+                            existingCategory.Description = categoryDto.Description;
+                            existingCategory.Requirements = categoryDto.Requirements;
+                            existingCategory.Benefits = categoryDto.Benefits;
+                            existingCategory.UpdatedAt = DateTime.UtcNow;
+                        }
+                        else
+                        {
+                            // Add new category
+                            jobPost.JobPostCategories.Add(new JobPostCategory
+                            {
+                                Id = Guid.NewGuid(),
+                                JobCategoryId = categoryDto.JobCategoryId,
+                                JobPostId = jobPost.Id,
+                                Type = categoryDto.Type,
+                                RequiredCount = categoryDto.RequiredCount,
+                                Description = categoryDto.Description,
+                                Requirements = categoryDto.Requirements,
+                                Benefits = categoryDto.Benefits,
+                                CreatedAt = DateTime.UtcNow,
+                                UpdatedAt = DateTime.UtcNow
+                            });
+                        }
+                    }
+                }
+                else
+                {
+                    return BadRequest(ApiResponse<JobPostDto>.ErrorResponse("At least one job category is required"));
+                }
+
                 await _context.SaveChangesAsync();
                 
                 // Reload with includes for DTO conversion
@@ -175,20 +232,59 @@ namespace dotnet_utcareers.Controllers
         {
             try
             {
-                var imageUrl = await _imageUploadService.UploadImageAsync(createDto.Thumbnail, "jobposts");
+                Console.WriteLine($"JobCategories is null: {createDto.JobCategories == null}");
+                if (createDto.JobCategories != null)
+                {
+                    Console.WriteLine($"JobCategories count: {createDto.JobCategories.Count}");
+                    for (int i = 0; i < createDto.JobCategories.Count; i++)
+                    {
+                        var cat = createDto.JobCategories[i];
+                        Console.WriteLine($"Category {i}: JobCategoryId={cat.JobCategoryId}, Type={cat.Type}, RequiredCount={cat.RequiredCount}");
+                    }
+                }
+                
+                // Validate JobCategories
+                if (createDto.JobCategories == null || createDto.JobCategories.Count == 0)
+                {
+                    return BadRequest(ApiResponse<JobPostDto>.ErrorResponse("At least one job category is required"));
+                }
+                
+                var jobCategories = createDto.JobCategories;
+
+                // Upload thumbnail
+                var thumbnailUrl = await _imageUploadService.UploadImageAsync(createDto.Thumbnail, "jobposts");
 
                 var jobPost = new JobPost
                 {
                     Id = Guid.NewGuid(),
                     CompanyId = createDto.CompanyId,
                     Title = createDto.Title,
-                    Thumbnail = imageUrl,
+                    Thumbnail = thumbnailUrl,
                     Status = createDto.Status,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 };
 
                 _context.JobPosts.Add(jobPost);
+
+                // Add job categories
+                foreach (var categoryDto in jobCategories)
+                {
+                    jobPost.JobPostCategories.Add(new JobPostCategory
+                    {
+                        Id = Guid.NewGuid(),
+                        JobCategoryId = categoryDto.JobCategoryId,
+                        JobPostId = jobPost.Id,
+                        Type = categoryDto.Type,
+                        RequiredCount = categoryDto.RequiredCount,
+                        Description = categoryDto.Description,
+                        Requirements = categoryDto.Requirements,
+                        Benefits = categoryDto.Benefits,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow
+                    });
+                }
+                
                 await _context.SaveChangesAsync();
 
                 // Load includes for DTO conversion

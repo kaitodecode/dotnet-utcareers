@@ -33,6 +33,8 @@ namespace dotnet_utcareers.DTOs
         [Required(ErrorMessage = "Status is required")]
         [RegularExpression("^(active|closed)$", ErrorMessage = "Status must be either 'active' or 'closed'")]
         public string Status { get; set; } = "active";
+
+        public List<JobPostCategoryDto>? JobCategories { get; set; }
     }
 
     public class UpdateJobPostDto
@@ -44,7 +46,6 @@ namespace dotnet_utcareers.DTOs
         [StringLength(200, ErrorMessage = "Title cannot exceed 200 characters")]
         public string Title { get; set; } = null!;
 
-        [Required(ErrorMessage = "Thumbnail is required")]
         public IFormFile? Thumbnail { get; set; }
 
         [Required(ErrorMessage = "Status is required")]
@@ -52,6 +53,29 @@ namespace dotnet_utcareers.DTOs
         public string Status { get; set; } = null!;
 
         // List of job category IDs
-        public List<Guid>? JobCategoryIds { get; set; }
+        public List<JobPostCategoryDto>? JobCategories { get; set; }
+    }
+
+    public class JobPostCategoryDto
+    {
+        [Required(ErrorMessage = "Job Category ID is required")]
+        public Guid JobCategoryId { get; set; }
+
+        [Required(ErrorMessage = "Type is required")]
+        [StringLength(100, ErrorMessage = "Type cannot exceed 100 characters")]
+        public string Type { get; set; } = null!;
+
+        [Required(ErrorMessage = "Required Count is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Required Count must be greater than 0")]
+        public int RequiredCount { get; set; }
+
+        [StringLength(2000, ErrorMessage = "Description cannot exceed 2000 characters")]
+        public string? Description { get; set; }
+
+        [StringLength(2000, ErrorMessage = "Requirements cannot exceed 2000 characters")]
+        public string? Requirements { get; set; }
+
+        [StringLength(2000, ErrorMessage = "Benefits cannot exceed 2000 characters")]
+        public string? Benefits { get; set; }
     }
 }

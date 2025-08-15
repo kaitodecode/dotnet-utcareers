@@ -49,21 +49,21 @@ namespace dotnet_utcareers.Controllers
                 }
 
                 var totalCount = await query.CountAsync();
-                
+
                 var companies = await query
                     .Skip((page - 1) * per_page)
                     .Take(per_page)
                     .ToListAsync();
 
                 var companyDtos = companies.Select(c => c.ToDto());
-                
+
                 var paginatedResponse = PaginationService.CreatePaginatedResponse(
                     companyDtos,
                     totalCount,
                     page,
                     per_page,
                     Request);
-                
+
                 return Ok(ApiResponse<PaginatedResponse<CompanyDto>>.SuccessResponse(paginatedResponse, "Companies retrieved successfully"));
             }
             catch (Exception ex)
@@ -71,6 +71,37 @@ namespace dotnet_utcareers.Controllers
                 return StatusCode(500, ApiResponse<PaginatedResponse<CompanyDto>>.ErrorResponse($"Internal server error: {ex.Message}"));
             }
         }
+
+        // GET: api/Companies/list
+        [HttpGet("list")]
+        public async Task<ActionResult<ApiResponse<List<CompanyDto>>>> GetCompaniesList(
+            [FromQuery] string search = null)
+        {
+            try
+            {
+                var query = _context.Companies
+                    .Where(c => c.DeletedAt == null);
+
+                // Apply search filter if search parameter is provided
+                if (!string.IsNullOrWhiteSpace(search))
+                {
+                    search = search.ToLower();
+                    query = query.Where(c =>
+                        c.Name.ToLower().Contains(search)
+                    );
+                }
+
+                var companies = await query.ToListAsync();
+                var companyDtos = companies.Select(c => c.ToDto()).ToList();
+
+                return Ok(ApiResponse<List<CompanyDto>>.SuccessResponse(companyDtos, "Companies retrieved successfully"));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<List<CompanyDto>>.ErrorResponse($"Internal server error: {ex.Message}"));
+            }
+        }
+
         // GET: api/Companies/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ApiResponse<CompanyDto>>> GetCompany(Guid id)
@@ -127,13 +158,13 @@ namespace dotnet_utcareers.Controllers
                     {
                         await _imageUploadService.DeleteImageAsync(company.Logo);
                     }
-                    
+
                     var logoUrl = await _imageUploadService.UploadImageAsync(updateDto.Logo, "companies");
                     company.Logo = logoUrl;
                 }
 
                 await _context.SaveChangesAsync();
-                
+
                 var companyDto = company.ToDto();
                 return Ok(ApiResponse<CompanyDto>.SuccessResponse(companyDto, "Company updated successfully"));
             }
@@ -185,7 +216,7 @@ namespace dotnet_utcareers.Controllers
                 await _context.SaveChangesAsync();
 
                 var companyDto = company.ToDto();
-                return CreatedAtAction("GetCompany", new { id = company.Id }, 
+                return CreatedAtAction("GetCompany", new { id = company.Id },
                     ApiResponse<CompanyDto>.SuccessResponse(companyDto, "Company created successfully"));
             }
             catch (Exception ex)
@@ -203,7 +234,7 @@ namespace dotnet_utcareers.Controllers
                 var company = await _context.Companies
                     .Where(c => c.Id == id && c.DeletedAt == null)
                     .FirstOrDefaultAsync();
-                    
+
                 if (company == null)
                 {
                     return NotFound(ApiResponse<object>.ErrorResponse("Company not found"));
@@ -217,9 +248,9 @@ namespace dotnet_utcareers.Controllers
             }
             catch (Exception ex)
             {
-                 return StatusCode(500, ApiResponse<object>.ErrorResponse($"Internal server error: {ex.Message}"));
-             }
-         }
+                return StatusCode(500, ApiResponse<object>.ErrorResponse($"Internal server error: {ex.Message}"));
+            }
+        }
 
         // POST: api/Companies/5/upload-logo
         [HttpPost("{id}/upload-logo")]

@@ -19,7 +19,7 @@ namespace dotnet_utcareers.DTOs
 
     public class CreateUserDto
     {
-        public string? Photo { get; set; }
+        public IFormFile? Photo { get; set; }
 
         [Required(ErrorMessage = "Name is required")]
         [StringLength(100, ErrorMessage = "Name cannot exceed 100 characters")]
@@ -42,15 +42,11 @@ namespace dotnet_utcareers.DTOs
         [Required(ErrorMessage = "Password is required")]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be between 6 and 100 characters")]
         public string Password { get; set; } = null!;
-
-        [Required(ErrorMessage = "Role is required")]
-        [StringLength(50, ErrorMessage = "Role cannot exceed 50 characters")]
-        public string Role { get; set; } = null!;
     }
 
     public class UpdateUserDto
     {
-        public string? Photo { get; set; }
+        public IFormFile? Photo { get; set; }
 
         [Required(ErrorMessage = "Name is required")]
         [StringLength(100, ErrorMessage = "Name cannot exceed 100 characters")]
@@ -67,11 +63,11 @@ namespace dotnet_utcareers.DTOs
         [StringLength(500, ErrorMessage = "Address cannot exceed 500 characters")]
         public string? Address { get; set; }
 
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be between 6 and 100 characters")]
+        public string? Password { get; set; }
+
         [StringLength(1000, ErrorMessage = "Description cannot exceed 1000 characters")]
         public string? Description { get; set; }
-
-        [StringLength(50, ErrorMessage = "Role cannot exceed 50 characters")]
-        public string? Role { get; set; }
     }
 
     public class ChangePasswordDto

@@ -43,28 +43,27 @@ namespace dotnet_utcareers.Services
             return new User
             {
                 Id = Guid.NewGuid(),
-                Photo = dto.Photo,
+                Photo = dto.Photo?.FileName ?? "",
                 Name = dto.Name,
                 Phone = dto.Phone,
                 Email = dto.Email,
                 Address = dto.Address,
                 Description = dto.Description,
                 Password = HashPassword(dto.Password),
-                Role = dto.Role,
+                Role = "pelamar",
                 CreatedAt = DateTime.UtcNow
             };
         }
 
         public static void UpdateModel(this UpdateUserDto dto, User user)
         {
-            user.Photo = dto.Photo;
+            if (dto.Photo != null)
+                user.Photo = dto.Photo.FileName;
             user.Name = dto.Name;
             user.Phone = dto.Phone;
             user.Email = dto.Email;
             user.Address = dto.Address;
             user.Description = dto.Description;
-            if (!string.IsNullOrEmpty(dto.Role))
-                user.Role = dto.Role;
             user.UpdatedAt = DateTime.UtcNow;
         }
 
@@ -184,7 +183,8 @@ namespace dotnet_utcareers.Services
                 Id = Guid.NewGuid(),
                 CompanyId = dto.CompanyId,
                 Title = dto.Title,
-                Thumbnail = dto.Thumbnail?.FileName ?? "",
+                
+                Thumbnail = dto.Thumbnail.FileName ?? "",
                 Status = dto.Status,
                 CreatedAt = DateTime.UtcNow
             };

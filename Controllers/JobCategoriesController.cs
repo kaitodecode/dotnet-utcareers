@@ -70,6 +70,37 @@ namespace dotnet_utcareers.Controllers
             }
         }
 
+
+        // GET: api/JobCategories/list
+        [HttpGet("list")]
+        public async Task<ActionResult<ApiResponse<List<JobCategoryDto>>>> GetJobCategoriesList(
+            [FromQuery] string search = null)
+        {
+            try
+            {
+                var query = _context.JobCategories
+                    .Where(jc => jc.DeletedAt == null);
+
+                // Apply search filter if search parameter is provided
+                if (!string.IsNullOrWhiteSpace(search))
+                {
+                    search = search.ToLower();
+                    query = query.Where(jc =>
+                        jc.Name.ToLower().Contains(search)
+                    );
+                }
+                
+                var jobCategories = await query.ToListAsync();
+                var jobCategoryDtos = jobCategories.Select(jc => jc.ToDto()).ToList();
+                
+                return Ok(ApiResponse<List<JobCategoryDto>>.SuccessResponse(jobCategoryDtos, "Job categories retrieved successfully"));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<List<JobCategoryDto>>.ErrorResponse($"Internal server error: {ex.Message}"));
+            }
+        }
+
         // GET: api/JobCategories/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ApiResponse<JobCategoryDto>>> GetJobCategory(Guid id)

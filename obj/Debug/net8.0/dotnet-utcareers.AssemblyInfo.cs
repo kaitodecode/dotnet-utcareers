@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("dotnet-utcareers")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+35f9840d74e52bcc537a1c63eadf568ee4fc9771")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2de7925928511478aea9061b99e4fb3654e1d431")]
 [assembly: System.Reflection.AssemblyProductAttribute("dotnet-utcareers")]
 [assembly: System.Reflection.AssemblyTitleAttribute("dotnet-utcareers")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
