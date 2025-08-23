@@ -15,7 +15,20 @@ namespace dotnet_utcareers.DTOs
         
         // Navigation properties as DTOs
         public CompanyDto? Company { get; set; }
-        public List<JobCategoryDto>? JobCategories { get; set; }
+        public List<JobPostCategoryDetailDto>? JobCategories { get; set; } = new List<JobPostCategoryDetailDto>();
+    }
+
+    public class JobPostCategoryDetailDto
+    {
+        public Guid Id { get; set; }
+        public JobCategoryDto? JobCategory { get; set; }
+        public string Type { get; set; } = null!;
+        public int RequiredCount { get; set; }
+        public string? Description { get; set; }
+        public string? Requirements { get; set; }
+        public string? Benefits { get; set; }
+        public DateTime? CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 
     public class CreateJobPostDto

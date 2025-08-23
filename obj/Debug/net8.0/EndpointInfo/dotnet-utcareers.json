@@ -1975,6 +1975,49 @@
         },
         "additionalProperties": false
       },
+      "JobPostCategoryDetailDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "jobCategory": {
+            "$ref": "#/components/schemas/JobCategoryDto"
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "requiredCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "requirements": {
+            "type": "string",
+            "nullable": true
+          },
+          "benefits": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "JobPostCategoryDto": {
         "required": [
           "jobCategoryId",
@@ -2058,7 +2101,7 @@
           "jobCategories": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/JobCategoryDto"
+              "$ref": "#/components/schemas/JobPostCategoryDetailDto"
             },
             "nullable": true
           }

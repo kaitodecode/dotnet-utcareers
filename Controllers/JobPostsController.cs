@@ -53,21 +53,21 @@ namespace dotnet_utcareers.Controllers
                 }
 
                 var totalCount = await query.CountAsync();
-                
+
                 var jobPosts = await query
                     .Skip((page - 1) * per_page)
                     .Take(per_page)
                     .ToListAsync();
-                
+
                 var jobPostDtos = jobPosts.Select(jp => jp.ToDto());
-                
+
                 var paginatedResponse = PaginationService.CreatePaginatedResponse(
                     jobPostDtos,
                     totalCount,
                     page,
                     per_page,
                     Request);
-                
+
                 return Ok(ApiResponse<PaginatedResponse<JobPostDto>>.SuccessResponse(paginatedResponse, "Data job posts berhasil diambil"));
             }
             catch (Exception ex)
@@ -104,130 +104,127 @@ namespace dotnet_utcareers.Controllers
         }
 
         // PUT: api/JobPosts/5
+        // PUT: api/JobPosts/{id}
         [HttpPut("{id}")]
+        [Consumes("multipart/form-data")]
         public async Task<ActionResult<ApiResponse<JobPostDto>>> PutJobPost(Guid id, [FromForm] UpdateJobPostDto updateDto)
         {
             try
             {
+                // Load parent only
                 var jobPost = await _context.JobPosts
-                    .Where(jp => jp.Id == id && jp.DeletedAt == null)
-                    .FirstOrDefaultAsync();
+                    .FirstOrDefaultAsync(jp => jp.Id == id && jp.DeletedAt == null);
 
                 if (jobPost == null)
-                {
                     return NotFound(ApiResponse<JobPostDto>.ErrorResponse("Job post tidak ditemukan"));
-                }
 
-                // Handle thumbnail update if provided
+                // === validasi ===
+                if (updateDto.JobCategories == null || !updateDto.JobCategories.Any())
+                    return BadRequest(ApiResponse<JobPostDto>.ErrorResponse("At least one job category is required"));
+
+                if (!await _context.Companies.AnyAsync(c => c.Id == updateDto.CompanyId))
+                    return BadRequest(ApiResponse<JobPostDto>.ErrorResponse($"Invalid CompanyId: {updateDto.CompanyId}"));
+
+                var dtoIds = updateDto.JobCategories.Select(c => c.JobCategoryId).ToList();
+                var dbCatIds = await _context.JobCategories
+                    .Where(jc => dtoIds.Contains(jc.Id))
+                    .Select(jc => jc.Id)
+                    .ToListAsync();
+
+                if (dbCatIds.Count != dtoIds.Count)
+                    return BadRequest(ApiResponse<JobPostDto>.ErrorResponse($"Invalid JobCategoryIds: {string.Join(", ", dtoIds.Except(dbCatIds))}"));
+
+                // === update parent ===
                 if (updateDto.Thumbnail != null)
                 {
-                    // Delete old thumbnail if exists
                     if (!string.IsNullOrEmpty(jobPost.Thumbnail))
-                    {
                         await _imageUploadService.DeleteImageAsync(jobPost.Thumbnail);
-                    }
 
-                    // Upload new thumbnail
-                    var thumbnailUrl = await _imageUploadService.UploadImageAsync(updateDto.Thumbnail, "jobposts");
-                    jobPost.Thumbnail = thumbnailUrl;
+                    jobPost.Thumbnail = await _imageUploadService.UploadImageAsync(updateDto.Thumbnail, "jobposts");
                 }
-
-
-                // Update basic properties
                 jobPost.Title = updateDto.Title;
+                jobPost.CompanyId = updateDto.CompanyId;
                 jobPost.Status = updateDto.Status;
                 jobPost.UpdatedAt = DateTime.UtcNow;
 
-                // Update job categories
-                if (updateDto.JobCategories != null && updateDto.JobCategories.Count > 0)
+                // ----------------------------------------------
+                // 1) Ambil semua child existing (AsNoTracking)
+                // ----------------------------------------------
+                var existingChildren = await _context.JobPostCategories
+                    .AsNoTracking()
+                    .Where(c => c.JobPostId == jobPost.Id)
+                    .ToListAsync();
+
+                // 2) Hapus yang tidak ada di payload
+                var removeList = existingChildren
+                    .Where(e => !updateDto.JobCategories.Any(d => d.JobCategoryId == e.JobCategoryId))
+                    .ToList();
+
+                if (removeList.Any())
                 {
-                    var jobCategories = updateDto.JobCategories;
-
-                    // Get existing categories that are not in the update
-                    var newCategoryIds = jobCategories.Select(c => c.JobCategoryId).ToList();
-                    var categoriesToRemove = jobPost.JobPostCategories
-                        .Where(jpc => !newCategoryIds.Contains(jpc.JobCategoryId))
-                        .ToList();
-
-                    // Remove only categories that are no longer needed
-                    if (categoriesToRemove.Any())
-                    {
-                        _context.JobPostCategories.RemoveRange(categoriesToRemove);
-                    }
-                    
-                    // Add or update categories
-                    foreach (var categoryDto in jobCategories)
-                    {
-                        var existingCategory = jobPost.JobPostCategories
-                            .FirstOrDefault(jpc => jpc.JobCategoryId == categoryDto.JobCategoryId);
-
-                        if (existingCategory != null)
-                        {
-                            // Update existing category
-                            existingCategory.Type = categoryDto.Type;
-                            existingCategory.RequiredCount = categoryDto.RequiredCount;
-                            existingCategory.Description = categoryDto.Description;
-                            existingCategory.Requirements = categoryDto.Requirements;
-                            existingCategory.Benefits = categoryDto.Benefits;
-                            existingCategory.UpdatedAt = DateTime.UtcNow;
-                        }
-                        else
-                        {
-                            // Add new category
-                            jobPost.JobPostCategories.Add(new JobPostCategory
-                            {
-                                Id = Guid.NewGuid(),
-                                JobCategoryId = categoryDto.JobCategoryId,
-                                JobPostId = jobPost.Id,
-                                Type = categoryDto.Type,
-                                RequiredCount = categoryDto.RequiredCount,
-                                Description = categoryDto.Description,
-                                Requirements = categoryDto.Requirements,
-                                Benefits = categoryDto.Benefits,
-                                CreatedAt = DateTime.UtcNow,
-                                UpdatedAt = DateTime.UtcNow
-                            });
-                        }
-                    }
+                    _context.JobPostCategories.RemoveRange(removeList);
                 }
-                else
+
+                // 3) Update yang ada
+                foreach (var entity in existingChildren.Except(removeList))
                 {
-                    return BadRequest(ApiResponse<JobPostDto>.ErrorResponse("At least one job category is required"));
+                    var dto = updateDto.JobCategories.First(d => d.JobCategoryId == entity.JobCategoryId);
+
+                    // reattach
+                    _context.JobPostCategories.Attach(entity);
+
+                    entity.Type = dto.Type;
+                    entity.RequiredCount = dto.RequiredCount;
+                    entity.Description = dto.Description;
+                    entity.Requirements = dto.Requirements;
+                    entity.Benefits = dto.Benefits;
+                    entity.UpdatedAt = DateTime.UtcNow;
+                }
+
+                // 4) Insert yang baru
+                var newItems = updateDto.JobCategories
+                    .Where(d => !existingChildren.Any(e => e.JobCategoryId == d.JobCategoryId))
+                    .ToList();
+
+                foreach (var dto in newItems)
+                {
+                    _context.JobPostCategories.Add(new JobPostCategory
+                    {
+                        Id = Guid.NewGuid(),
+                        JobPostId = jobPost.Id,
+                        JobCategoryId = dto.JobCategoryId,
+                        Type = dto.Type,
+                        RequiredCount = dto.RequiredCount,
+                        Description = dto.Description,
+                        Requirements = dto.Requirements,
+                        Benefits = dto.Benefits,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow
+                    });
                 }
 
                 await _context.SaveChangesAsync();
-                
-                // Reload with includes for DTO conversion
+
+                // reload includes for dto
                 await _context.Entry(jobPost)
                     .Collection(jp => jp.JobPostCategories)
                     .Query()
-                    .Include(jpc => jpc.JobCategory)
+                    .Include(c => c.JobCategory)
                     .LoadAsync();
-                await _context.Entry(jobPost)
-                    .Reference(jp => jp.Company)
-                    .LoadAsync();
-                
-                var jobPostDto = jobPost.ToDto();
-                return Ok(ApiResponse<JobPostDto>.SuccessResponse(jobPostDto, "Job post berhasil diupdate"));
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!JobPostExists(id))
-                {
-                    return NotFound(ApiResponse<JobPostDto>.ErrorResponse("Job post tidak ditemukan"));
-                }
-                else
-                {
-                    return StatusCode(500, ApiResponse<JobPostDto>.ErrorResponse("Terjadi konflik saat mengupdate data"));
-                }
+                await _context.Entry(jobPost).Reference(jp => jp.Company).LoadAsync();
+
+                return Ok(ApiResponse<JobPostDto>.SuccessResponse(jobPost.ToDto(), "Job post berhasil diupdate"));
             }
             catch (Exception ex)
             {
                 return StatusCode(500, ApiResponse<JobPostDto>.ErrorResponse($"Terjadi kesalahan: {ex.Message}"));
             }
         }
+
+
         // POST: api/JobPosts
         [HttpPost]
+        [Consumes("multipart/form-data")]
         public async Task<ActionResult<ApiResponse<JobPostDto>>> PostJobPost([FromForm] CreateJobPostDto createDto)
         {
             try
@@ -242,13 +239,39 @@ namespace dotnet_utcareers.Controllers
                         Console.WriteLine($"Category {i}: JobCategoryId={cat.JobCategoryId}, Type={cat.Type}, RequiredCount={cat.RequiredCount}");
                     }
                 }
-                
+
                 // Validate JobCategories
                 if (createDto.JobCategories == null || createDto.JobCategories.Count == 0)
                 {
                     return BadRequest(ApiResponse<JobPostDto>.ErrorResponse("At least one job category is required"));
                 }
-                
+
+                // Validate that CompanyId exists
+                var companyExists = await _context.Companies.AnyAsync(c => c.Id == createDto.CompanyId);
+                if (!companyExists)
+                {
+                    return BadRequest(ApiResponse<JobPostDto>.ErrorResponse($"Invalid CompanyId: {createDto.CompanyId}"));
+                }
+
+                // Validate that all JobCategoryIds exist
+                var jobCategoryIds = createDto.JobCategories.Select(c => c.JobCategoryId).ToList();
+                var existingJobCategories = await _context.JobCategories
+                    .Where(jc => jobCategoryIds.Contains(jc.Id))
+                    .ToListAsync();
+
+                if (existingJobCategories.Count != jobCategoryIds.Count)
+                {
+                    var missingIds = jobCategoryIds.Except(existingJobCategories.Select(jc => jc.Id));
+                    return BadRequest(ApiResponse<JobPostDto>.ErrorResponse($"Invalid JobCategoryIds: {string.Join(", ", missingIds)}"));
+                }
+
+                // Check for duplicate JobCategoryIds
+                var duplicateJobCategoryIds = jobCategoryIds.GroupBy(x => x).Where(g => g.Count() > 1).Select(g => g.Key).ToList();
+                if (duplicateJobCategoryIds.Any())
+                {
+                    return BadRequest(ApiResponse<JobPostDto>.ErrorResponse($"Duplicate JobCategoryIds found: {string.Join(", ", duplicateJobCategoryIds)}"));
+                }
+
                 var jobCategories = createDto.JobCategories;
 
                 // Upload thumbnail
@@ -284,7 +307,7 @@ namespace dotnet_utcareers.Controllers
                         UpdatedAt = DateTime.UtcNow
                     });
                 }
-                
+
                 await _context.SaveChangesAsync();
 
                 // Load includes for DTO conversion
@@ -296,7 +319,7 @@ namespace dotnet_utcareers.Controllers
                 await _context.Entry(jobPost)
                     .Reference(jp => jp.Company)
                     .LoadAsync();
-                
+
                 var jobPostDto = jobPost.ToDto();
                 var response = ApiResponse<JobPostDto>.SuccessResponse(jobPostDto, "Job post berhasil dibuat");
                 return CreatedAtAction("GetJobPost", new { id = jobPost.Id }, response);
@@ -316,7 +339,7 @@ namespace dotnet_utcareers.Controllers
                 var jobPost = await _context.JobPosts
                     .Where(jp => jp.Id == id && jp.DeletedAt == null)
                     .FirstOrDefaultAsync();
-                    
+
                 if (jobPost == null)
                 {
                     return NotFound(ApiResponse<object>.ErrorResponse("Job post tidak ditemukan"));

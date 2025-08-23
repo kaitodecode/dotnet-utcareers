@@ -42,21 +42,22 @@ namespace dotnet_utcareers.Controllers
                 }
 
                 var totalCount = await query.CountAsync();
-                
+
                 var users = await query
                     .Skip((page - 1) * per_page)
+                    .Where((t) => t.DeletedAt == null)
                     .Take(per_page)
                     .ToListAsync();
 
                 var userDtos = users.Select(u => u.ToDto());
-                
+
                 var paginatedResponse = PaginationService.CreatePaginatedResponse(
                     userDtos,
                     totalCount,
                     page,
                     per_page,
                     Request);
-                
+
                 return Ok(ApiResponse<PaginatedResponse<UserDto>>.SuccessResponse(paginatedResponse, "Data users berhasil diambil"));
             }
             catch (Exception ex)
@@ -89,6 +90,16 @@ namespace dotnet_utcareers.Controllers
                     .Where(u => u.Id == id && u.DeletedAt == null)
                     .FirstOrDefaultAsync();
 
+                var checkEmailAndPhoneNumber = await _context.Users
+                .Where(u => u.Id != id && (u.Email == updateDto.Email || u.Phone == updateDto.Phone) && u.DeletedAt == null)
+                .FirstAsync();
+
+                if (checkEmailAndPhoneNumber != null)
+                {
+                    return BadRequest(ApiResponse<UserDto>.ErrorResponse("Email atau nomor telp sudah digunakan"));
+                }
+
+
                 if (user == null)
                 {
                     return NotFound(ApiResponse<UserDto>.ErrorResponse("User tidak ditemukan"));
@@ -115,13 +126,13 @@ namespace dotnet_utcareers.Controllers
                     {
                         await _imageUploadService.DeleteImageAsync(user.Photo);
                     }
-                    
+
                     var photoUrl = await _imageUploadService.UploadImageAsync(updateDto.Photo, "users");
                     user.Photo = photoUrl;
                 }
 
                 await _context.SaveChangesAsync();
-                
+
                 var userDto = user.ToDto();
                 return Ok(ApiResponse<UserDto>.SuccessResponse(userDto, "Data user berhasil diperbarui"));
             }
@@ -173,7 +184,7 @@ namespace dotnet_utcareers.Controllers
                 await _context.SaveChangesAsync();
 
                 var userDto = user.ToDto();
-                return CreatedAtAction("GetUser", new { id = user.Id }, 
+                return CreatedAtAction("GetUser", new { id = user.Id },
                     ApiResponse<UserDto>.SuccessResponse(userDto, "User berhasil dibuat"));
             }
             catch (Exception ex)
@@ -197,8 +208,8 @@ namespace dotnet_utcareers.Controllers
             {
                 await _imageUploadService.DeleteImageAsync(user.Photo);
             }
+            user.DeletedAt = DateTime.Now;
 
-            _context.Users.Remove(user);
             await _context.SaveChangesAsync();
 
             return Ok(ApiResponse<object>.SuccessResponse(null, "User berhasil dihapus"));

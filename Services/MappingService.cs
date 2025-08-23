@@ -161,7 +161,6 @@ namespace dotnet_utcareers.Services
         // JobPost mappings
         public static JobPostDto ToDto(this JobPost jobPost)
         {
-            var firstJobPostCategory = jobPost.JobPostCategories?.FirstOrDefault();
             return new JobPostDto
             {
                 Id = jobPost.Id,
@@ -172,7 +171,18 @@ namespace dotnet_utcareers.Services
                 CreatedAt = jobPost.CreatedAt,
                 UpdatedAt = jobPost.UpdatedAt,
                 Company = jobPost.Company?.ToDto(),
-                JobCategories = jobPost.JobPostCategories?.Select(jpc => jpc.JobCategory?.ToDto()).Where(jc => jc != null).ToList()
+                JobCategories = jobPost.JobPostCategories?.Select(jpc => new JobPostCategoryDetailDto
+                {
+                    Id = jpc.Id,
+                    JobCategory = jpc.JobCategory?.ToDto(),
+                    Type = jpc.Type,
+                    RequiredCount = jpc.RequiredCount,
+                    Description = jpc.Description,
+                    Requirements = jpc.Requirements,
+                    Benefits = jpc.Benefits,
+                    CreatedAt = jpc.CreatedAt,
+                    UpdatedAt = jpc.UpdatedAt
+                }).ToList()
             };
         }
 
